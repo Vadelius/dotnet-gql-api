@@ -1,10 +1,10 @@
 ﻿using HotChocolate;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 using Server.GraphQL.Data;
-using System;
+using Server.GraphQL.DataLoader;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,5 +18,11 @@ namespace Server.GraphQL.Exercises
             [ScopedService] ApplicationDbContext context,
             CancellationToken cancellationToken) =>
             await context.Exercises.ToListAsync(cancellationToken);
+
+        public Task<Exercise> GetExerciseByIdAsync(
+            [ID(nameof(Exercise))] int id,
+            ExerciseByIdDataLoader exerciseById,
+            CancellationToken cancellationToken) =>
+            exerciseById.LoadAsync(id, cancellationToken);
     }
 }

@@ -22,14 +22,14 @@ namespace Server.GraphQL.Types
 
             descriptor
                 .Field(t => t.Activities)
-                .ResolveWith<ActivityResolvers>(t => t.GetSessionsAsync(default!, default!, default!, default))
+                .ResolveWith<ActivityResolvers>(t => t.GetActivitiesAsync(default!, default!, default!, default))
                 .UseDbContext<ApplicationDbContext>()
                 .Name("activities");
         }
 
         private class ActivityResolvers
         {
-            public async Task<IEnumerable<Activity>> GetSessionsAsync(
+            public async Task<IEnumerable<Activity>> GetActivitiesAsync(
                 User user,
                 [ScopedService] ApplicationDbContext dbContext,
                 ActivityByIdDataLoader sessionById,
