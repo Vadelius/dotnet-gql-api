@@ -23,6 +23,7 @@ using System.ComponentModel.DataAnnotations;
 
         public int Points { get; set; }
 
-        public ICollection<Activity>? Activities { get; set; } = new List<Activity>();
+        public ICollection<Activity> Activities { get; set; } = new List<Activity>();
+        public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
     }
 }

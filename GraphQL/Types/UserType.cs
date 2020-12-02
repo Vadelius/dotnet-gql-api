@@ -25,6 +25,12 @@ namespace Server.GraphQL.Types
                 .ResolveWith<ActivityResolvers>(t => t.GetActivitiesAsync(default!, default!, default!, default))
                 .UseDbContext<ApplicationDbContext>()
                 .Name("activities");
+
+            descriptor
+                .Field(t => t.Exercises)
+                .ResolveWith<ExerciseResolvers>(t => t.GetExercisesAsync(default!, default!, default!, default))
+                .UseDbContext<ApplicationDbContext>()
+                .Name("exercises");
         }
 
         private class ActivityResolvers
@@ -32,16 +38,34 @@ namespace Server.GraphQL.Types
             public async Task<IEnumerable<Activity>> GetActivitiesAsync(
                 User user,
                 [ScopedService] ApplicationDbContext dbContext,
-                ActivityByIdDataLoader sessionById,
+                ActivityByIdDataLoader userById,
                 CancellationToken cancellationToken)
             {
-                int[] userIds = await dbContext.Users
+                int[] activityIds = await dbContext.Users
                     .Where(s => s.Id == user.Id)
-                    .Include(s => s.Activities)
-                    .SelectMany(s => s.Activities.Select(t => t.CreatedById))
+                    .Include(user => user.Activities)
+                    .SelectMany(user => user.Activities.Select(activity => activity.CreatedById))
                     .ToArrayAsync();
 
-                return await sessionById.LoadAsync(userIds, cancellationToken);
+                return await userById.LoadAsync(activityIds, cancellationToken);
+            }
+        }
+        
+        private class ExerciseResolvers
+        {
+            public async Task<IEnumerable<Exercise>> GetExercisesAsync(
+                User user,
+                [ScopedService] ApplicationDbContext dbContext,
+                ExerciseByIdDataLoader userById,
+                CancellationToken cancellationToken)
+            {
+                int[] exerciseIds = await dbContext.Users
+                    .Where(s => s.Id == user.Id)
+                    .Include(user => user.Exercises)
+                    .SelectMany(user => user.Exercises.Select(exercise => exercise.CreatedById))
+                    .ToArrayAsync();
+
+                return await userById.LoadAsync(exerciseIds, cancellationToken);
             }
         }
     }
