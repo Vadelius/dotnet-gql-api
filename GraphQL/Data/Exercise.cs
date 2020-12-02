@@ -1,6 +1,7 @@
 ﻿using HotChocolate;
 using HotChocolate.Types;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -29,6 +30,8 @@ namespace Server.GraphQL.Data
         [ForeignKey("CreatedBy")]
         public int CreatedById { get; set; }
         public virtual User? CreatedBy { get; set; }
+
+        public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
     }
 }

@@ -3,3 +3,4 @@
 GraphQL/bin/
 GraphQL/obj/
 GraphQL/Migrations/
+server.db-journal
