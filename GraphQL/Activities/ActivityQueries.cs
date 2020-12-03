@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.GraphQL.Data;
 using Server.GraphQL.DataLoader;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,10 +15,10 @@ namespace Server.GraphQL.Activities
     public class ActivityQueries
     {
         [UseApplicationDbContext]
-        public async Task<IEnumerable<Activity>> GetActivitiesAsync(
-            [ScopedService] ApplicationDbContext context,
-            CancellationToken cancellationToken) =>
-            await context.Activities.ToListAsync(cancellationToken);
+        [UsePaging]
+        public IQueryable<Activity> GetActivities(
+            [ScopedService] ApplicationDbContext context) =>
+            context.Activities.OrderByDescending(a => a.Created);
 
         public Task<Activity> GetActivityByIdAsync(
             [ID(nameof(Activity))] int id,

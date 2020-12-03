@@ -39,6 +39,8 @@ namespace Server.GraphQL
                 .AddType<ExerciseType>()
                 .AddType<ActivityType>()
                 .EnableRelaySupport()
+                .AddFiltering()
+                .AddSorting()
                 .AddDataLoader<UserByIdDataLoader>()
                 .AddDataLoader<ActivityByIdDataLoader>()
                 .AddDataLoader<ExerciseByIdDataLoader>();

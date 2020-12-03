@@ -21,16 +21,12 @@ namespace Server.GraphQL.Data
 
         [Required]
         public double Multiplier { get; set; }
-
         public bool Verified { get; set; }
 
         [GraphQLType(typeof(NonNullType<DateType>))]
         public DateTime Created { get; set; }
-
-        [ForeignKey("CreatedBy")]
         public int CreatedById { get; set; }
-        public virtual User? CreatedBy { get; set; }
-
+        public User? CreatedBy { get; set; }
         public ICollection<Activity> Activities { get; set; } = new List<Activity>();
 
     }

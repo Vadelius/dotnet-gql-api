@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Server.GraphQL.Data;
 using Server.GraphQL.DataLoader;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,10 +15,10 @@ namespace Server.GraphQL.Exercises
     public class ExerciseQueries
     {
         [UseApplicationDbContext]
-        public async Task<IEnumerable<Exercise>> GetExercisesAsync(
-            [ScopedService] ApplicationDbContext context,
-            CancellationToken cancellationToken) =>
-            await context.Exercises.ToListAsync(cancellationToken);
+        [UsePaging]
+        public IQueryable<Exercise> GetExercises(
+            [ScopedService] ApplicationDbContext context) =>
+            context.Exercises.OrderBy(e => e.Multiplier);
 
         public Task<Exercise> GetExerciseByIdAsync(
             [ID(nameof(Exercise))] int id,

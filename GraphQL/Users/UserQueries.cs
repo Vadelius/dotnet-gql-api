@@ -1,10 +1,14 @@
 ﻿using HotChocolate;
+using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 using Server.GraphQL.Data;
 using Server.GraphQL.DataLoader;
+using Server.GraphQL.Types;
+using Server.GraphQL.Users;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,10 +18,14 @@ namespace Server.GraphQL.Exercises
     public class UserQueries
     {
         [UseApplicationDbContext]
-        public async Task<IEnumerable<User>> GetUsersAsync(
-            [ScopedService] ApplicationDbContext context,
-            CancellationToken cancellationToken) =>
-            await context.Users.ToListAsync(cancellationToken);
+        [UsePaging(typeof(NonNullType<UserType>))]
+        [UseFiltering(typeof(UserFilterInputType))]
+        [UseSorting]
+        public IQueryable<User> GetUsers(
+            [ScopedService] ApplicationDbContext context) =>
+            context.Users.OrderBy(e => e.Id);
+        // TODO: Perhaps add by XP as an alternative for betting indexing.
+
 
         public Task<User> GetUserByIdAsync(
             [ID(nameof(User))] int id,
