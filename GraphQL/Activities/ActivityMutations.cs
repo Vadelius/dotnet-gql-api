@@ -1,4 +1,5 @@
 ﻿using HotChocolate;
+using HotChocolate.Subscriptions;
 using HotChocolate.Types;
 using Server.GraphQL.Common;
 using Server.GraphQL.Data;
@@ -14,7 +15,7 @@ namespace Server.GraphQL.Activities
         public async Task<AddActivityPayload> AddActivityAsync(
             AddActivityInput input,
             [ScopedService] ApplicationDbContext context,
-            CancellationToken cancellationToken)
+            [Service]ITopicEventSender eventSender)
         {
             if (string.IsNullOrEmpty(input.Description))
             {
@@ -55,7 +56,12 @@ namespace Server.GraphQL.Activities
             };
 
             context.Activities.Add(activity);
-            await context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync();
+
+            await eventSender.SendAsync(
+                nameof(ActivitySubscriptions.OnActivityAddedAsync),
+                activity.Id);
 
             return new AddActivityPayload(activity);
         }

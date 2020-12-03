@@ -35,12 +35,15 @@ namespace Server.GraphQL
                     .AddTypeExtension<UserMutations>()
                     .AddTypeExtension<ExerciseMutations>()
                     .AddTypeExtension<ActivityMutations>()
+                .AddSubscriptionType(d => d.Name("Subscription"))
+                    .AddTypeExtension<ActivitySubscriptions>()
                 .AddType<UserType>()
                 .AddType<ExerciseType>()
                 .AddType<ActivityType>()
                 .EnableRelaySupport()
                 .AddFiltering()
                 .AddSorting()
+                .AddInMemorySubscriptions()
                 .AddDataLoader<UserByIdDataLoader>()
                 .AddDataLoader<ActivityByIdDataLoader>()
                 .AddDataLoader<ExerciseByIdDataLoader>();
@@ -54,6 +57,7 @@ namespace Server.GraphQL
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseWebSockets();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
