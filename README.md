@@ -1,6 +1,6 @@
 ![.NET Core](https://github.com/Vadelius/dotnet-gql-api/workflows/.NET%20Core/badge.svg)
 
-.NET GraphQL thing.
+.NET GraphQL thing with HotChocolate (https://github.com/ChilliCream/hotchocolate)
 
 Run migrations:
 ```
