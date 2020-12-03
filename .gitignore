@@ -3,4 +3,7 @@
 GraphQL/bin/
 GraphQL/obj/
 GraphQL/Migrations/
+GraphQL.Tests/bin/
+GraphQL.Tests/obj/
+GraphQL.Tests/__snapshots__/
 server.db-journal
